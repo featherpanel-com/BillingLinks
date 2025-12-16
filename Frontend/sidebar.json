@@ -1,0 +1,27 @@
+{
+  "client": {
+    "/billinglinks": {
+      "name": "Link 4 Rewards",
+      "icon": "🔗",
+      "showBadge": false,
+      "redirect": "/billinglinks",
+      "component": "/billinglinks/dist/links.html",
+      "description": "Create and manage billing links",
+      "category": "client",
+      "group": "Earn Credits"
+    }
+  },
+  "admin": {
+    "/billinglinks": {
+      "name": "Billing Links",
+      "icon": "🔗",
+      "showBadge": false,
+      "redirect": "/billinglinks",
+      "component": "/billinglinks/dist/admin.html",
+      "description": "Configure billing links",
+      "category": "admin",
+      "group": "Billing"
+    }
+  },
+  "server": {}
+}

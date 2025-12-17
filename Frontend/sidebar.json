@@ -13,14 +13,14 @@
   },
   "admin": {
     "/billinglinks": {
-      "name": "Billing Links",
+      "name": "Link 4 Rewards",
       "icon": "🔗",
       "showBadge": false,
       "redirect": "/billinglinks",
       "component": "/billinglinks/dist/admin.html",
-      "description": "Configure billing links",
+      "description": "Create and manage billing links",
       "category": "admin",
-      "group": "Billing"
+      "group": "Fremium Earn Credits"
     }
   },
   "server": {}

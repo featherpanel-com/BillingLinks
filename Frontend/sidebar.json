@@ -1,10 +1,10 @@
 {
   "client": {
-    "/billinglinks": {
+    "/earn/link4rewards": {
       "name": "Link 4 Rewards",
       "icon": "🔗",
       "showBadge": false,
-      "redirect": "/billinglinks",
+      "redirect": "/earn/link4rewards",
       "component": "/billinglinks/dist/links.html",
       "description": "Create and manage billing links",
       "category": "client",

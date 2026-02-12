@@ -107,7 +107,7 @@ class BillingLinksController
             return ApiResponse::error('Admin not authenticated', 'UNAUTHORIZED', 401);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent() ?: '{}', true, 32);
         if (json_last_error() !== JSON_ERROR_NONE) {
             return ApiResponse::error('Invalid JSON in request body', 'INVALID_JSON', 400);
         }

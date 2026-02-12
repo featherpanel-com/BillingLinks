@@ -3,6 +3,7 @@
     "/earn/link4rewards": {
       "name": "Link 4 Rewards",
       "icon": "🔗",
+      "lucideIcon": "link",
       "showBadge": false,
       "redirect": "/earn/link4rewards",
       "component": "/billinglinks/dist/links.html",
@@ -15,6 +16,7 @@
     "/billinglinks": {
       "name": "Link 4 Rewards",
       "icon": "🔗",
+      "lucideIcon": "link",
       "showBadge": false,
       "redirect": "/billinglinks",
       "component": "/billinglinks/dist/admin.html",

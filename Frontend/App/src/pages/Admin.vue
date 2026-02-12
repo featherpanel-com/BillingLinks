@@ -5,13 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Loader2,
-  Settings,
-  Save,
-  ToggleLeft,
-  ToggleRight,
-} from "lucide-vue-next";
+import { Loader2, Settings, Save } from "lucide-vue-next";
 import {
   useLinksAdminAPI,
   type LinksSettings,
@@ -87,17 +81,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full overflow-auto p-4">
+  <div class="w-full h-full overflow-auto p-4 md:p-8 min-h-screen">
     <div class="container mx-auto max-w-6xl">
-      <div class="mb-6">
-        <h1 class="text-2xl font-semibold">Links4Rewards - Admin</h1>
-        <p class="text-sm text-muted-foreground">
+      <div class="mb-6 text-center md:text-left">
+        <h1
+          class="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+        >
+          Links4Rewards - Admin
+        </h1>
+        <p class="text-muted-foreground mt-2">
           Configure Links4Rewards settings and manage link providers
         </p>
       </div>
 
       <Tabs v-model="activeTab" class="w-full">
-        <TabsList class="grid w-full grid-cols-1">
+        <TabsList class="grid w-full grid-cols-1 bg-muted/30 border border-border/50">
           <TabsTrigger value="settings">
             <Settings class="h-4 w-4 mr-2" />
             Settings
@@ -120,7 +118,7 @@ onMounted(() => {
               >
                 <!-- Enable/Disable -->
                 <div
-                  class="flex items-center justify-between p-4 border-2 rounded-lg bg-muted/30"
+                  class="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border/50"
                 >
                   <div>
                     <Label class="text-base font-semibold"
@@ -130,20 +128,23 @@ onMounted(() => {
                       Allow users to earn credits by completing links
                     </p>
                   </div>
-                  <Button
+                  <button
                     type="button"
+                    role="switch"
+                    :aria-checked="isEnabled"
                     @click="
                       updateSetting('l4r_enabled', isEnabled ? 'false' : 'true')
                     "
-                    variant="ghost"
-                    size="sm"
+                    :class="[
+                      'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+                      isEnabled ? 'bg-primary' : 'bg-muted',
+                    ]"
                   >
-                    <ToggleRight
-                      v-if="isEnabled"
-                      class="h-6 w-6 text-primary"
+                    <span
+                      class="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform"
+                      :class="isEnabled ? 'translate-x-5' : 'translate-x-0.5'"
                     />
-                    <ToggleLeft v-else class="h-6 w-6 text-muted-foreground" />
-                  </Button>
+                  </button>
                 </div>
 
                 <!-- Provider Settings -->
@@ -155,7 +156,7 @@ onMounted(() => {
 
                   <!-- Linkvertise -->
                   <div
-                    class="border-2 border-border rounded-lg p-4 space-y-4 bg-muted/20"
+                    class="border border-border/50 rounded-lg p-4 space-y-4 bg-muted/20"
                   >
                     <div class="flex justify-between items-start">
                       <div>
@@ -164,26 +165,30 @@ onMounted(() => {
                           Enable earning from Linkvertise shortlinks
                         </p>
                       </div>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        role="switch"
+                        :aria-checked="isProviderEnabled('linkvertise')"
                         @click="
                           updateSetting(
                             'l4r_linkvertise_enabled',
                             isProviderEnabled('linkvertise') ? 'false' : 'true'
                           )
                         "
+                        :class="[
+                          'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+                          isProviderEnabled('linkvertise') ? 'bg-primary' : 'bg-muted',
+                        ]"
                       >
-                        <ToggleRight
-                          v-if="isProviderEnabled('linkvertise')"
-                          class="h-6 w-6 text-primary"
+                        <span
+                          class="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform"
+                          :class="
+                            isProviderEnabled('linkvertise')
+                              ? 'translate-x-5'
+                              : 'translate-x-0.5'
+                          "
                         />
-                        <ToggleLeft
-                          v-else
-                          class="h-6 w-6 text-muted-foreground"
-                        />
-                      </Button>
+                      </button>
                     </div>
 
                     <div
@@ -327,7 +332,7 @@ onMounted(() => {
 
                   <!-- ShareUs -->
                   <div
-                    class="border-2 border-border rounded-lg p-4 space-y-4 bg-muted/20"
+                    class="border border-border/50 rounded-lg p-4 space-y-4 bg-muted/20"
                   >
                     <div class="flex justify-between items-start">
                       <div>
@@ -336,26 +341,30 @@ onMounted(() => {
                           Enable earning from ShareUs shortlinks
                         </p>
                       </div>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        role="switch"
+                        :aria-checked="isProviderEnabled('shareus')"
                         @click="
                           updateSetting(
                             'l4r_shareus_enabled',
                             isProviderEnabled('shareus') ? 'false' : 'true'
                           )
                         "
+                        :class="[
+                          'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+                          isProviderEnabled('shareus') ? 'bg-primary' : 'bg-muted',
+                        ]"
                       >
-                        <ToggleRight
-                          v-if="isProviderEnabled('shareus')"
-                          class="h-6 w-6 text-primary"
+                        <span
+                          class="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform"
+                          :class="
+                            isProviderEnabled('shareus')
+                              ? 'translate-x-5'
+                              : 'translate-x-0.5'
+                          "
                         />
-                        <ToggleLeft
-                          v-else
-                          class="h-6 w-6 text-muted-foreground"
-                        />
-                      </Button>
+                      </button>
                     </div>
 
                     <div
@@ -491,7 +500,7 @@ onMounted(() => {
 
                   <!-- LinkPays -->
                   <div
-                    class="border-2 border-border rounded-lg p-4 space-y-4 bg-muted/20"
+                    class="border border-border/50 rounded-lg p-4 space-y-4 bg-muted/20"
                   >
                     <div class="flex justify-between items-start">
                       <div>
@@ -500,26 +509,30 @@ onMounted(() => {
                           Enable earning from LinkPays shortlinks
                         </p>
                       </div>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        role="switch"
+                        :aria-checked="isProviderEnabled('linkpays')"
                         @click="
                           updateSetting(
                             'l4r_linkpays_enabled',
                             isProviderEnabled('linkpays') ? 'false' : 'true'
                           )
                         "
+                        :class="[
+                          'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+                          isProviderEnabled('linkpays') ? 'bg-primary' : 'bg-muted',
+                        ]"
                       >
-                        <ToggleRight
-                          v-if="isProviderEnabled('linkpays')"
-                          class="h-6 w-6 text-primary"
+                        <span
+                          class="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform"
+                          :class="
+                            isProviderEnabled('linkpays')
+                              ? 'translate-x-5'
+                              : 'translate-x-0.5'
+                          "
                         />
-                        <ToggleLeft
-                          v-else
-                          class="h-6 w-6 text-muted-foreground"
-                        />
-                      </Button>
+                      </button>
                     </div>
 
                     <div
@@ -659,7 +672,7 @@ onMounted(() => {
 
                   <!-- GyaniLinks -->
                   <div
-                    class="border-2 border-border rounded-lg p-4 space-y-4 bg-muted/20"
+                    class="border border-border/50 rounded-lg p-4 space-y-4 bg-muted/20"
                   >
                     <div class="flex justify-between items-start">
                       <div>
@@ -668,26 +681,30 @@ onMounted(() => {
                           Enable earning from GyaniLinks shortlinks
                         </p>
                       </div>
-                      <Button
+                      <button
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        role="switch"
+                        :aria-checked="isProviderEnabled('gyanilinks')"
                         @click="
                           updateSetting(
                             'l4r_gyanilinks_enabled',
                             isProviderEnabled('gyanilinks') ? 'false' : 'true'
                           )
                         "
+                        :class="[
+                          'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background',
+                          isProviderEnabled('gyanilinks') ? 'bg-primary' : 'bg-muted',
+                        ]"
                       >
-                        <ToggleRight
-                          v-if="isProviderEnabled('gyanilinks')"
-                          class="h-6 w-6 text-primary"
+                        <span
+                          class="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform"
+                          :class="
+                            isProviderEnabled('gyanilinks')
+                              ? 'translate-x-5'
+                              : 'translate-x-0.5'
+                          "
                         />
-                        <ToggleLeft
-                          v-else
-                          class="h-6 w-6 text-muted-foreground"
-                        />
-                      </Button>
+                      </button>
                     </div>
 
                     <div

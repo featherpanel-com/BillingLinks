@@ -10,7 +10,7 @@ import {
   Coins,
   ExternalLink,
   TrendingUp,
-} from "lucide-vue-next";
+} from "@lucide/vue";
 import { useLinksAPI, type LinkProvider } from "@/composables/useLinksAPI";
 import { useToast } from "vue-toastification";
 import axios from "axios";

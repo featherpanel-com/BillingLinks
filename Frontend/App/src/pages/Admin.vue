@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Settings, Save } from "lucide-vue-next";
+import { Loader2, Settings, Save } from "@lucide/vue";
 import {
   useLinksAdminAPI,
   type LinksSettings,

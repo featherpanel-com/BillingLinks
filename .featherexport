@@ -22,3 +22,5 @@
 banner.png 
 README.md
 */App/*
+# Test files (not shipped in the .fpa)
+tests/*

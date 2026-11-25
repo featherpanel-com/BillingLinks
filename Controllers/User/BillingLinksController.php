@@ -43,6 +43,7 @@ use App\Addons\billinglinks\Helpers\LinksHelper;
 use App\Addons\billingcore\Helpers\CreditsHelper;
 use App\Addons\billinglinks\Services\ShareUS\ShareUS;
 use App\Addons\billinglinks\Services\LinkPays\LinkPays;
+use App\Addons\billinglinks\Services\Linkvertise\Linkvertise;
 use App\Addons\billinglinks\Services\GyaniLinks\GyaniLinks;
 
 #[OA\Tag(name: 'User - Billing Links', description: 'Links4Rewards management for users')]
@@ -139,14 +140,10 @@ class BillingLinksController
             'ip_address' => CloudFlareRealIP::getRealIP(),
         ]);
 
-        // Handle different providers
-        if ($provider === 'linkvertise') {
-            $userId = $settings['user_id'] ?? '583258';
-
-            return $this->renderLinkvertisePage($linkUuid, $userId);
-        }
-
-        // For other providers, get shortened link and redirect
+        // Redirect to the provider short URL (including Linkvertise).
+        // Linkvertise must not land on the earn callback first: that is what
+        // made "Start Link" report "completed too quickly" without opening
+        // Linkvertise at all.
         try {
             $shortenedUrl = $this->getShortenedLink($provider, $finalLink, $settings);
             header('Location: ' . $shortenedUrl);
@@ -353,6 +350,15 @@ class BillingLinksController
      */
     private function getShortenedLink(string $provider, string $url, array $settings): string
     {
+        if ($provider === 'linkvertise') {
+            $userId = trim((string) ($settings['user_id'] ?? ''));
+            if ($userId === '') {
+                throw new \Exception('Linkvertise user ID is not configured');
+            }
+
+            return (new Linkvertise())->getLink($userId, $url);
+        }
+
         $apiKey = $settings['api_key'] ?? '';
         if (empty($apiKey)) {
             throw new \Exception('API key not configured for ' . $provider);
@@ -712,83 +718,6 @@ class BillingLinksController
                 <h1>Success!</h1>
                 <p>You have successfully completed the link and earned <?php echo htmlspecialchars($coinsPerLink); ?> credits!</p>
                 <a href="/earn/links" class="button btn-back" onclick="window.close(); return false;">Go back</a>
-            </div>
-        </body>
-        </html>
-        <?php
-        exit;
-    }
-
-    /**
-     * Render Linkvertise page with script.
-     */
-    private function renderLinkvertisePage(string $linkUuid, string $userId): Response
-    {
-        header('Content-Type: text/html');
-        header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://publisher.linkvertise.com; style-src 'self' 'unsafe-inline';");
-        ?>
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Continue to Linkvertise</title>
-            <style>
-                body {
-                    margin: 0;
-                    padding: 0;
-                    background-color: #111827;
-                    height: 100vh;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-family: system-ui, -apple-system, sans-serif;
-                }
-                .container {
-                    text-align: center;
-                }
-                h1 {
-                    color: #ffffff;
-                    font-size: 1.875rem;
-                    font-weight: bold;
-                    margin-bottom: 1.5rem;
-                }
-                p {
-                    color: #9CA3AF;
-                    margin-bottom: 2rem;
-                }
-                .button {
-                    background-color: #4F46E5;
-                    color: #ffffff;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 0.5rem;
-                    text-decoration: none;
-                    font-weight: bold;
-                    transition: background-color 0.2s;
-                    display: inline-block;
-                    margin: 0.5rem;
-                }
-                .button:hover {
-                    background-color: #4338CA;
-                }
-                .button.btn-back {
-                    background-color: #6B7280;
-                }
-                .button.btn-back:hover {
-                    background-color: #4B5563;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>Continue to Linkvertise</h1>
-                <p>Click the button below to continue to Linkvertise and earn rewards</p>
-                <a href="/api/user/billinglinks/earn/<?php echo htmlspecialchars($linkUuid); ?>" class="button">
-                    Continue to Linkvertise
-                </a>
-                <a href="/dashboard" class="button btn-back" onclick="window.close(); return false;">
-                    Go back
-                </a>
-                <script src="https://publisher.linkvertise.com/cdn/linkvertise.js"></script>
-                <script>linkvertise(<?php echo htmlspecialchars($userId); ?>, { whitelist: [], blacklist: [] });</script>
             </div>
         </body>
         </html>
